@@ -87,7 +87,7 @@ class _MenScreenState extends State<MenScreen> {
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: NetworkImage(
-                      'https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800'),
+                      'https://templates.simplified.co/thumb/467f8964-64a6-4c45-9c48-05e877088548.jpg?w=800'),
                   fit: BoxFit.cover,
                 ),
               ),
