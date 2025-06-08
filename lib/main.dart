@@ -7,7 +7,8 @@ import 'providers/auth_provider.dart';
 import 'providers/cart_provider.dart';
 import 'providers/products_provider.dart';
 import 'providers/theme_provider.dart';
-import 'providers/battery_provider.dart'; // NEW: Battery provider
+import 'providers/battery_provider.dart';
+import 'providers/network_provider.dart'; // 👈 NEW: Network provider
 
 // Import screens
 import 'screens/home_screen.dart';
@@ -19,7 +20,8 @@ import 'screens/contact_screen.dart';
 import 'screens/login_screen.dart';
 
 // Import widgets
-import 'widgets/battery_status_indicator.dart'; // NEW: Battery indicator
+import 'widgets/battery_status_indicator.dart';
+import 'widgets/network_status_widget.dart'; // 👈 NEW: Network status widget
 
 void main() {
   runApp(const PearlPrestigeApp());
@@ -36,14 +38,16 @@ class PearlPrestigeApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ProductsProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => BatteryProvider()),
         ChangeNotifierProvider(
-            create: (_) => BatteryProvider()), // NEW: Battery provider
+            create: (_) => NetworkProvider()), // 👈 NEW: Network provider
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
-          // Initialize battery monitoring when app starts
+          // Initialize battery and network monitoring when app starts
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.read<BatteryProvider>().initialize();
+            // Network provider initializes automatically in its constructor
           });
 
           return MaterialApp(
@@ -105,7 +109,10 @@ class _MainScreenState extends State<MainScreen> {
         centerTitle: true,
         elevation: 0,
         actions: [
-          // NEW: Battery status indicator in app bar
+          // 👈 NEW: Network status indicator
+          const NetworkStatusIndicator(showOnlyWhenOffline: true),
+
+          // Battery status indicator
           const CompactBatteryIndicator(),
 
           // Cart icon with badge
@@ -163,15 +170,20 @@ class _MainScreenState extends State<MainScreen> {
                       break;
                     case 'logout':
                       await auth.logout();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Logged out successfully'),
-                          backgroundColor: Color(0xFF8B4513),
-                        ),
-                      );
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Logged out successfully'),
+                            backgroundColor: Color(0xFF8B4513),
+                          ),
+                        );
+                      }
                       break;
                     case 'battery':
                       _showBatteryInfo(context);
+                      break;
+                    case 'network': // 👈 NEW: Network info option
+                      _showNetworkInfo(context);
                       break;
                   }
                 },
@@ -220,6 +232,17 @@ class _MainScreenState extends State<MainScreen> {
                       ],
                     ),
                   ),
+                  // 👈 NEW: Network status menu item
+                  const PopupMenuItem(
+                    value: 'network',
+                    child: Row(
+                      children: [
+                        Icon(Icons.wifi),
+                        SizedBox(width: 8),
+                        Text('Network Status'),
+                      ],
+                    ),
+                  ),
                 ],
               );
             },
@@ -228,7 +251,10 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: Column(
         children: [
-          // NEW: Battery warning widget at the top
+          // 👈 NEW: Network status banner at the top
+          const NetworkStatusBanner(),
+
+          // Battery warning widget
           Consumer<BatteryProvider>(
             builder: (context, batteryProvider, child) {
               if (!batteryProvider.shouldShowWarning) {
@@ -273,6 +299,9 @@ class _MainScreenState extends State<MainScreen> {
               );
             },
           ),
+
+          // 👈 NEW: Network warning widget (shows when offline)
+          const NetworkWarningWidget(),
 
           // Main content
           Expanded(
@@ -329,6 +358,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  // Existing battery info dialog
   void _showBatteryInfo(BuildContext context) {
     final batteryProvider = context.read<BatteryProvider>();
 
@@ -386,6 +416,17 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  // 👈 NEW: Network info dialog
+  void _showNetworkInfo(BuildContext context) {
+    final networkProvider = context.read<NetworkProvider>();
+
+    showDialog(
+      context: context,
+      builder: (context) =>
+          NetworkDetailsDialog(networkProvider: networkProvider),
     );
   }
 }
