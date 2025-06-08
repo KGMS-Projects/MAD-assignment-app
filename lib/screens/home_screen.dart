@@ -22,6 +22,15 @@ class HomeScreen extends StatelessWidget {
             ),
             child: Stack(
               children: [
+                // Background Network Image
+                Positioned.fill(
+                  child: Image.network(
+                    'https://images.unsplash.com/photo-1483985988355-763728e1935b?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D', // Replace with your image URL
+                    fit: BoxFit.cover,
+                  ),
+                ),
+
+                // Dark Overlay
                 const Positioned.fill(
                   child: DecoratedBox(
                     decoration: BoxDecoration(
@@ -29,6 +38,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+
+                // Content
                 Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -117,7 +128,7 @@ class HomeScreen extends StatelessWidget {
                         title: 'Women',
                         subtitle: 'HAUTE COUTURE',
                         imageUrl:
-                            'https://images.unsplash.com/photo-1596462324594-b4dd8afbb4dd?w=400',
+                            'https://thumbs.dreamstime.com/b/portrait-two-sexy-pretty-beautiful-women-fashion-style-clothes-sisters-long-curly-hair-perfect-make-up-people-lifestyle-113021487.jpg?w=400',
                         onTap: () {},
                       ),
                     ),
@@ -127,7 +138,7 @@ class HomeScreen extends StatelessWidget {
                         title: 'Men',
                         subtitle: 'SARTORIAL EXCELLENCE',
                         imageUrl:
-                            'https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=400',
+                            'https://threadcurve.com/wp-content/uploads/2021/05/rockabilly-style-men-may072021.jpg?w=400',
                         onTap: () {},
                       ),
                     ),
