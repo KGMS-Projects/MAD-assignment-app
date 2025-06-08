@@ -62,7 +62,7 @@ class _WomenScreenState extends State<WomenScreen> {
                   decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(
-                          'https://images.unsplash.com/photo-1596462324594-b4dd8afbb4dd?w=800'),
+                          'https://marketplace.canva.com/EAFnry8lWaQ/1/0/1600w/canva-beige-simple-new-arrival-banner-landscape-RcZGsv83sk0.jpg?w=800'),
                       fit: BoxFit.cover,
                     ),
                   ),
